@@ -1,0 +1,213 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f0f0f0;
+    font-family: 'Orbitron', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#game-container {
+    position: relative;
+    width: 800px;
+    height: 600px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 4px solid #543847;
+}
+
+#game-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: #71c5cf; /* Pleasant sky blue */
+}
+
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Let clicks pass through to canvas when playing */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#score-display {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 4rem;
+    font-weight: 900;
+    color: white;
+    -webkit-text-stroke: 3px #543847;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#score-display.active {
+    opacity: 1;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 20;
+}
+
+.screen.active {
+    opacity: 1;
+    pointer-events: auto; /* Enable clicks on buttons */
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+.title {
+    font-size: 4.5rem;
+    margin-bottom: 10px;
+    color: white;
+    -webkit-text-stroke: 3px #543847;
+    text-shadow: 0 5px 0 #543847;
+    text-align: center;
+    animation: float 3s ease-in-out infinite;
+}
+
+#start-screen p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: white;
+    -webkit-text-stroke: 1px #543847;
+    font-weight: bold;
+}
+
+#player-name-input {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 4px solid #543847;
+    border-radius: 8px;
+    text-align: center;
+    outline: none;
+    background: #ffffff;
+    color: #543847;
+    font-weight: bold;
+    width: 280px;
+    transition: all 0.2s ease;
+}
+
+#player-name-input:focus {
+    box-shadow: 0 0 15px rgba(113, 197, 207, 0.8);
+    transform: scale(1.05);
+}
+
+
+.score-board {
+    background: #ded895;
+    border: 4px solid #543847;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 30px 0;
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.2);
+    text-align: center;
+    color: #543847;
+    width: 280px;
+}
+
+.score-board p {
+    font-size: 1.5rem;
+    margin: 5px 0;
+    font-weight: bold;
+}
+
+.score-board span {
+    color: white;
+    -webkit-text-stroke: 1px #543847;
+    font-weight: 900;
+}
+
+#leaderboard-container {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 2px dashed #543847;
+}
+
+#leaderboard-container h3 {
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+}
+
+#leaderboard-list {
+    text-align: left;
+    margin-left: 40px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    list-style-position: inside;
+}
+
+#leaderboard-list li {
+    margin-bottom: 3px;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 20px;
+}
+
+.flappy-button {
+    background: #e86101;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 15px 20px;
+    border: 4px solid white;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #543847;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    width: 280px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.flappy-button:hover {
+    background: #ff7518;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 #543847;
+}
+
+.flappy-button:active {
+    transform: translateY(6px);
+    box-shadow: none;
+}
+
+@keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+.screen.active { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Glide | Official Web Game</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Canvas for rendering game world (bird, pipes, background scrolling) -->
+        <canvas id="game-canvas" width="800" height="600"></canvas>
+        
+        <!-- UI Overlays -->
+        <div id="ui-layer">
+            <div id="score-display">0</div>
+            
+            <div id="auth-screen" class="screen active">
+                <h1 class="title">WELCOME</h1>
+                <p>Please enter your name</p>
+                <input type="text" id="player-name-input" placeholder="ENTER NAME" maxlength="12" />
+                <button id="save-name-btn" class="flappy-button">CONTINUE</button>
+            </div>
+
+            <div id="start-screen" class="screen">
+                <h1 class="title">FLAPPY GLIDE</h1>
+                <p>Click, Space or Touch to Fly</p>
+                <button id="start-btn" class="flappy-button">START GAME</button>
+                <button id="show-leaderboard-start-btn" class="flappy-button">LEADERBOARD</button>
+            </div>
+            
+            <div id="game-over-screen" class="screen">
+                <h1 class="title">CRASHED</h1>
+                <div class="score-board">
+                    <p>SCORE: <span id="final-score">0</span></p>
+                </div>
+                <button id="restart-btn" class="flappy-button">PLAY AGAIN</button>
+                <button id="show-leaderboard-btn" class="flappy-button">LEADERBOARD</button>
+            </div>
+
+            <div id="leaderboard-screen" class="screen">
+                <h1 class="title">LEADERBOARD</h1>
+                <div class="score-board" style="margin-top: 10px; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                    <ol id="leaderboard-list" style="margin: 0; padding: 0;"></ol>
+                </div>
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <button id="prev-page-btn" class="flappy-button" style="padding: 10px 20px; font-size: 1.2rem;">&laquo; PREV</button>
+                    <button id="next-page-btn" class="flappy-button" style="padding: 10px 20px; font-size: 1.2rem;">NEXT &raquo;</button>
+                </div>
+                <button id="close-leaderboard-btn" class="flappy-button">BACK</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/game.js"></script>
+</body>
+</html>

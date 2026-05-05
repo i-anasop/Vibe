@@ -36,7 +36,7 @@ async function loginToLootLocker() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                game_identifier: LL_API_KEY,
+                game_key: LL_API_KEY,
                 game_version: "1.0.0",
                 player_identifier: playerIdentifier
             })

@@ -24,11 +24,12 @@
                 <button id="save-name-btn" class="flappy-button">CONTINUE</button>
             </div>
 
-            <div id="start-screen" class="screen">
-                <h1 class="title">FLAPPY GLIDE</h1>
-                <p>Click, Space or Touch to Fly</p>
-                <button id="start-btn" class="flappy-button">START GAME</button>
+            <div id="home-screen" class="screen">
+                <h1 class="title" style="margin-bottom: 20px;">FLAPPY GLIDE</h1>
+                <button id="start-btn" class="flappy-button">PLAY GAME</button>
+                <button id="open-skins-btn" class="flappy-button">SKINS</button>
                 <button id="show-leaderboard-start-btn" class="flappy-button">LEADERBOARD</button>
+                <button id="change-name-btn" class="flappy-button">CHANGE NAME</button>
             </div>
             
             <div id="game-over-screen" class="screen">
@@ -38,6 +39,29 @@
                 </div>
                 <button id="restart-btn" class="flappy-button">PLAY AGAIN</button>
                 <button id="show-leaderboard-btn" class="flappy-button">LEADERBOARD</button>
+                <button id="game-over-home-btn" class="flappy-button">HOME MENU</button>
+            </div>
+
+            <div id="skins-screen" class="screen">
+                <h1 class="title">SKINS</h1>
+                <div class="skins-grid">
+                    <div class="skin-card" data-skin="standard">
+                        <div class="skin-preview" style="background: #f3c623;"></div>
+                        <p>Standard</p>
+                        <span>Unlocked</span>
+                    </div>
+                    <div class="skin-card locked" id="skin-gold" data-skin="golden">
+                        <div class="skin-preview" style="background: #FFD700; box-shadow: 0 0 10px #FF8C00;"></div>
+                        <p>Golden</p>
+                        <span>🔒 Best: 20</span>
+                    </div>
+                    <div class="skin-card locked" id="skin-neon" data-skin="neon">
+                        <div class="skin-preview" style="background: #00ffff; box-shadow: 0 0 15px #00ffff;"></div>
+                        <p>Neon Blue</p>
+                        <span>🔒 Best: 50</span>
+                    </div>
+                </div>
+                <button id="close-skins-btn" class="flappy-button" style="margin-top: 20px;">BACK TO HOME</button>
             </div>
 
             <div id="leaderboard-screen" class="screen">

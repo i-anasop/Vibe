@@ -284,6 +284,74 @@ body {
 @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 .screen.active { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
+/* Skins Grid */
+.skins-grid {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 90%;
+    max-width: 400px;
+}
+
+.skin-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 100px;
+}
+
+.skin-card:hover:not(.locked) {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+.skin-card.selected {
+    border-color: #f3c623;
+    box-shadow: 0 0 15px rgba(243, 198, 35, 0.5);
+    background: rgba(243, 198, 35, 0.2);
+}
+
+.skin-card.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(100%);
+}
+
+.skin-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 0 auto 10px auto;
+    border: 2px solid #543847;
+}
+
+.skin-card p {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.skin-card span {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.skin-card.selected span {
+    color: #f3c623;
+    font-weight: bold;
+}
+
 @media (max-width: 500px) {
     .title {
         font-size: 3rem;

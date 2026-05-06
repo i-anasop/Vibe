@@ -4,12 +4,18 @@ const ctx = canvas.getContext('2d');
 const playerNameInput = document.getElementById('player-name-input');
 const authScreen = document.getElementById('auth-screen');
 const saveNameBtn = document.getElementById('save-name-btn');
-const startScreen = document.getElementById('start-screen');
+const homeScreen = document.getElementById('home-screen');
+const startBtn = document.getElementById('start-btn');
+const openSkinsBtn = document.getElementById('open-skins-btn');
+const changeNameBtn = document.getElementById('change-name-btn');
+const gameOverHomeBtn = document.getElementById('game-over-home-btn');
+const skinsScreen = document.getElementById('skins-screen');
+const closeSkinsBtn = document.getElementById('close-skins-btn');
+const skinCards = document.querySelectorAll('.skin-card');
 const gameOverScreen = document.getElementById('game-over-screen');
 const scoreDisplay = document.getElementById('score-display');
 const finalScoreDisplay = document.getElementById('final-score');
 const leaderboardList = document.getElementById('leaderboard-list');
-const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
 const leaderboardScreen = document.getElementById('leaderboard-screen');
 const showLeaderboardBtn = document.getElementById('show-leaderboard-btn');
@@ -106,13 +112,14 @@ playerNameInput.value = currentPlayerName;
 if (currentPlayerName) {
     gameState = 'start';
     authScreen.classList.remove('active');
-    startScreen.classList.add('active');
+    homeScreen.classList.add('active');
 }
 
 let leaderboardPage = 0;
 const PAGE_SIZE = 10;
 
 let personalBestScore = parseInt(localStorage.getItem('flappyBestScore')) || 0;
+let selectedSkin = localStorage.getItem('flappySelectedSkin') || 'standard';
 let globalTopScore = 0;
 let isRankOne = false;
 let shakeFrames = 0;
@@ -139,11 +146,11 @@ const bird = {
         ctx.rotate(this.rotation);
         
         // Body
-        if (personalBestScore >= 50) {
+        if (selectedSkin === 'neon') {
             ctx.fillStyle = '#00ffff';
             ctx.shadowColor = '#00ffff';
             ctx.shadowBlur = 15;
-        } else if (personalBestScore >= 20) {
+        } else if (selectedSkin === 'golden') {
             ctx.fillStyle = '#FFD700';
             ctx.shadowColor = '#FF8C00';
             ctx.shadowBlur = 10;
@@ -479,12 +486,65 @@ saveNameBtn.addEventListener('click', () => {
     setPlayerName(currentPlayerName);
     
     authScreen.classList.remove('active');
-    startScreen.classList.add('active');
+    homeScreen.classList.add('active');
     gameState = 'start';
 });
 
 startBtn.addEventListener('click', startGame);
 restartBtn.addEventListener('click', resetGame);
+
+openSkinsBtn.addEventListener('click', () => {
+    homeScreen.classList.remove('active');
+    skinsScreen.classList.add('active');
+    updateSkinsUI();
+});
+
+closeSkinsBtn.addEventListener('click', () => {
+    skinsScreen.classList.remove('active');
+    homeScreen.classList.add('active');
+});
+
+changeNameBtn.addEventListener('click', () => {
+    homeScreen.classList.remove('active');
+    authScreen.classList.add('active');
+    gameState = 'auth';
+});
+
+gameOverHomeBtn.addEventListener('click', () => {
+    gameOverScreen.classList.remove('active');
+    homeScreen.classList.add('active');
+    gameState = 'start';
+});
+
+function updateSkinsUI() {
+    const goldCard = document.getElementById('skin-gold');
+    const neonCard = document.getElementById('skin-neon');
+    
+    if (personalBestScore >= 20) {
+        goldCard.classList.remove('locked');
+        goldCard.querySelector('span').innerText = 'Unlocked';
+    }
+    if (personalBestScore >= 50) {
+        neonCard.classList.remove('locked');
+        neonCard.querySelector('span').innerText = 'Unlocked';
+    }
+    
+    skinCards.forEach(card => {
+        card.classList.remove('selected');
+        if (card.dataset.skin === selectedSkin) {
+            card.classList.add('selected');
+        }
+    });
+}
+
+skinCards.forEach(card => {
+    card.addEventListener('click', () => {
+        if (card.classList.contains('locked')) return;
+        selectedSkin = card.dataset.skin;
+        localStorage.setItem('flappySelectedSkin', selectedSkin);
+        updateSkinsUI();
+    });
+});
 
 showLeaderboardBtn.addEventListener('click', () => {
     gameOverScreen.classList.remove('active');
@@ -494,7 +554,7 @@ showLeaderboardBtn.addEventListener('click', () => {
 });
 
 showLeaderboardStartBtn.addEventListener('click', () => {
-    startScreen.classList.remove('active');
+    homeScreen.classList.remove('active');
     leaderboardPage = 0;
     leaderboardScreen.classList.add('active');
     renderLeaderboard();
@@ -505,7 +565,7 @@ closeLeaderboardBtn.addEventListener('click', () => {
     if (gameState === 'gameover') {
         gameOverScreen.classList.add('active');
     } else {
-        startScreen.classList.add('active');
+        homeScreen.classList.add('active');
     }
 });
 
@@ -524,7 +584,7 @@ nextPageBtn.addEventListener('click', () => {
 // Game Logic Functions
 function startGame() {
     gameState = 'playing';
-    startScreen.classList.remove('active');
+    homeScreen.classList.remove('active');
     scoreDisplay.classList.add('active');
     scoreDisplay.innerText = score;
     bird.jump();
@@ -629,7 +689,7 @@ function resetGame() {
     frames = 0;
     gameState = 'start';
     gameOverScreen.classList.remove('active');
-    startScreen.classList.add('active');
+    homeScreen.classList.add('active');
 }
 
 // Main Game Loop

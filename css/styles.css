@@ -390,55 +390,80 @@ body {
     flex: 1;
     min-width: 130px;
     display: flex;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    overflow: hidden;
 }
 
-.skin-card:hover:not(.locked) {
+.skin-card:hover {
     transform: translateY(-5px);
     background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .skin-card.selected {
-    border-color: #f3c623;
-    box-shadow: 0 0 20px rgba(243, 198, 35, 0.6);
-    background: rgba(243, 198, 35, 0.2);
-    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.25);
+    border-color: #a8ff78;
+    box-shadow: 0 0 20px rgba(168, 255, 120, 0.3);
 }
 
-.skin-card.locked {
-    opacity: 0.7;
-    cursor: not-allowed;
-    filter: grayscale(80%);
+.skin-card.selected::before {
+    content: 'SELECTED';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 0.6rem;
+    background: #a8ff78;
+    color: #1a2a44;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
 }
 
 .skin-preview {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     margin: 0 auto 10px auto;
     position: relative;
     background-image: url('../assets/bird.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    transition: transform 0.3s ease;
 }
 
+.skin-card:hover .skin-preview {
+    transform: scale(1.1);
+}
+
+/* Premium Skin Filters */
 .skin-card[data-skin="golden"] .skin-preview {
-    filter: drop-shadow(0 0 5px #FFD700) sepia(1) saturate(5) brightness(1.1);
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6)) sepia(0.8) saturate(6) brightness(1.1) contrast(1.1);
 }
 
 .skin-card[data-skin="neon"] .skin-preview {
-    filter: drop-shadow(0 0 5px #00ffff) hue-rotate(180deg) brightness(1.2);
+    filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.8)) hue-rotate(180deg) brightness(1.3) saturate(1.5);
+}
+
+.skin-card.locked .skin-preview {
+    filter: grayscale(1) brightness(0.5);
+    opacity: 0.7;
 }
 
 .skin-card p {
     font-size: 1.1rem;
     font-weight: bold;
-    margin: 5px 0;
+    margin: 10px 0;
     color: white;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .skin-status {

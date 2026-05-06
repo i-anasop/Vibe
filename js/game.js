@@ -45,6 +45,9 @@ async function loginToLootLocker() {
         if (data.session_token) {
             sessionToken = data.session_token;
             console.log("Logged into LootLocker successfully!");
+            if (currentPlayerName) {
+                setPlayerName(currentPlayerName);
+            }
         }
     } catch (e) {
         console.error("Error logging in to LootLocker", e);
@@ -76,6 +79,12 @@ let flashAlpha = 0;
 
 let currentPlayerName = localStorage.getItem('flappyPlayerName') || '';
 playerNameInput.value = currentPlayerName;
+
+if (currentPlayerName) {
+    gameState = 'start';
+    authScreen.classList.remove('active');
+    startScreen.classList.add('active');
+}
 
 let leaderboardPage = 0;
 const PAGE_SIZE = 10;

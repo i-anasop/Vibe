@@ -167,6 +167,11 @@ const bird = {
     radius: 16,
     rotation: 0,
     
+    init() {
+        this.img = new Image();
+        this.img.src = 'assets/bird.png';
+    },
+
     draw() {
         ctx.save();
         ctx.translate(this.x, this.y);
@@ -176,83 +181,35 @@ const bird = {
         }
         ctx.rotate(this.rotation);
         
-        // --- BODY ---
-        let bodyGrad = ctx.createRadialGradient(-4, -4, 2, 0, 0, this.radius);
+        // Apply Skin Filters
         if (selectedSkin === 'neon') {
-            bodyGrad.addColorStop(0, '#00ffff');
-            bodyGrad.addColorStop(1, '#008b8b');
-            ctx.shadowColor = '#00ffff';
-            ctx.shadowBlur = 15;
+            ctx.filter = 'drop-shadow(0 0 10px #00ffff) hue-rotate(180deg) brightness(1.2)';
         } else if (selectedSkin === 'golden') {
-            bodyGrad.addColorStop(0, '#FFFACD');
-            bodyGrad.addColorStop(1, '#FFD700');
-            ctx.shadowColor = '#FF8C00';
-            ctx.shadowBlur = 10;
+            ctx.filter = 'drop-shadow(0 0 10px #FFD700) sepia(1) saturate(5) hue-rotate(-10deg) brightness(1.1)';
         } else {
-            bodyGrad.addColorStop(0, '#ffeb3b');
-            bodyGrad.addColorStop(1, '#fbc02d');
-            ctx.shadowBlur = 0;
+            ctx.filter = 'none';
         }
-        
-        ctx.fillStyle = bodyGrad;
-        ctx.beginPath();
-        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.strokeStyle = '#2d3436';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
 
-        // --- WING (Sleek aerodynamic) ---
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-        ctx.beginPath();
-        ctx.moveTo(-this.radius * 0.4, 0);
-        ctx.quadraticCurveTo(-this.radius * 0.8, this.radius * 0.6, -this.radius * 0.2, this.radius * 0.4);
-        ctx.quadraticCurveTo(0, this.radius * 0.2, -this.radius * 0.4, 0);
-        ctx.fill();
-        ctx.stroke();
+        // Draw the bird image
+        // Center it: image is drawn from top-left, so we offset by -radius
+        if (this.img.complete) {
+            ctx.drawImage(this.img, -this.radius * 1.5, -this.radius * 1.5, this.radius * 3, this.radius * 3);
+        } else {
+            // Fallback if image hasn't loaded yet
+            ctx.fillStyle = '#f3c623';
+            ctx.beginPath();
+            ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
 
-        // --- EYE (Studio Style) ---
-        // White part
-        ctx.fillStyle = 'white';
-        ctx.beginPath();
-        ctx.arc(this.radius * 0.45, -this.radius * 0.35, this.radius * 0.35, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-
-        // Pupil
-        ctx.fillStyle = '#2d3436';
-        ctx.beginPath();
-        ctx.arc(this.radius * 0.55, -this.radius * 0.35, this.radius * 0.15, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Highlight (The "Sparkle")
-        ctx.fillStyle = 'white';
-        ctx.beginPath();
-        ctx.arc(this.radius * 0.5, -this.radius * 0.45, this.radius * 0.05, 0, Math.PI * 2);
-        ctx.fill();
-
-        // --- BEAK (Two-tone rounded) ---
-        ctx.fillStyle = '#ff9800';
-        ctx.beginPath();
-        ctx.moveTo(this.radius * 0.6, 0);
-        ctx.lineTo(this.radius * 1.2, this.radius * 0.2);
-        ctx.lineTo(this.radius * 0.6, this.radius * 0.4);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-        
-        // Upper beak line for detail
-        ctx.beginPath();
-        ctx.moveTo(this.radius * 0.6, this.radius * 0.15);
-        ctx.lineTo(this.radius * 1.0, this.radius * 0.2);
-        ctx.stroke();
+        // Reset filter for crown/other overlays
+        ctx.filter = 'none';
 
         if (isRankOne) {
             ctx.shadowBlur = 0;
-            ctx.font = '20px Arial';
+            ctx.font = '24px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText('👑', 0, -25);
+            ctx.fillText('👑', 0, -this.radius * 1.8);
         }
 
         ctx.restore();
@@ -507,6 +464,7 @@ const background = {
     }
 };
 background.initStars();
+bird.init();
 
 function resizeCanvas() {
     const container = document.getElementById('game-container');

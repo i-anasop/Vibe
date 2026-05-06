@@ -772,7 +772,11 @@ async function renderLeaderboard() {
         
     } catch (e) {
         console.error("Error fetching leaderboard", e);
-        leaderboardList.innerHTML = '<li>Error loading scores</li>';
+        if (e.message.includes('Failed to fetch')) {
+            leaderboardList.innerHTML = '<li>Connection Blocked: Please disable AdBlock or check your internet.</li>';
+        } else {
+            leaderboardList.innerHTML = `<li>Error: ${e.message || 'Check Console'}</li>`;
+        }
     }
     
     prevPageBtn.style.opacity = leaderboardPage === 0 ? '0.5' : '1';

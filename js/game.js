@@ -176,53 +176,76 @@ const bird = {
         }
         ctx.rotate(this.rotation);
         
-        // Body
+        // --- BODY ---
+        let bodyGrad = ctx.createRadialGradient(-4, -4, 2, 0, 0, this.radius);
         if (selectedSkin === 'neon') {
-            ctx.fillStyle = '#00ffff';
+            bodyGrad.addColorStop(0, '#00ffff');
+            bodyGrad.addColorStop(1, '#008b8b');
             ctx.shadowColor = '#00ffff';
             ctx.shadowBlur = 15;
         } else if (selectedSkin === 'golden') {
-            ctx.fillStyle = '#FFD700';
+            bodyGrad.addColorStop(0, '#FFFACD');
+            bodyGrad.addColorStop(1, '#FFD700');
             ctx.shadowColor = '#FF8C00';
             ctx.shadowBlur = 10;
         } else {
-            ctx.fillStyle = '#f3c623';
+            bodyGrad.addColorStop(0, '#ffeb3b');
+            bodyGrad.addColorStop(1, '#fbc02d');
             ctx.shadowBlur = 0;
         }
+        
+        ctx.fillStyle = bodyGrad;
         ctx.beginPath();
         ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = '#543847';
-        ctx.lineWidth = 2;
+        
+        ctx.strokeStyle = '#2d3436';
+        ctx.lineWidth = 1.5;
         ctx.stroke();
 
-        // Wing
+        // --- WING (Sleek aerodynamic) ---
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.beginPath();
+        ctx.moveTo(-this.radius * 0.4, 0);
+        ctx.quadraticCurveTo(-this.radius * 0.8, this.radius * 0.6, -this.radius * 0.2, this.radius * 0.4);
+        ctx.quadraticCurveTo(0, this.radius * 0.2, -this.radius * 0.4, 0);
+        ctx.fill();
+        ctx.stroke();
+
+        // --- EYE (Studio Style) ---
+        // White part
         ctx.fillStyle = 'white';
         ctx.beginPath();
-        ctx.ellipse(-5, 2, 8, 5, 0, 0, Math.PI * 2);
+        ctx.arc(this.radius * 0.45, -this.radius * 0.35, this.radius * 0.35, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
 
-        // Eye (White)
+        // Pupil
+        ctx.fillStyle = '#2d3436';
+        ctx.beginPath();
+        ctx.arc(this.radius * 0.55, -this.radius * 0.35, this.radius * 0.15, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Highlight (The "Sparkle")
         ctx.fillStyle = 'white';
         ctx.beginPath();
-        ctx.arc(6, -6, 6, 0, Math.PI * 2);
+        ctx.arc(this.radius * 0.5, -this.radius * 0.45, this.radius * 0.05, 0, Math.PI * 2);
+        ctx.fill();
+
+        // --- BEAK (Two-tone rounded) ---
+        ctx.fillStyle = '#ff9800';
+        ctx.beginPath();
+        ctx.moveTo(this.radius * 0.6, 0);
+        ctx.lineTo(this.radius * 1.2, this.radius * 0.2);
+        ctx.lineTo(this.radius * 0.6, this.radius * 0.4);
+        ctx.closePath();
         ctx.fill();
         ctx.stroke();
-
-        // Eye (Pupil)
-        ctx.fillStyle = 'black';
+        
+        // Upper beak line for detail
         ctx.beginPath();
-        ctx.arc(8, -6, 2, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Beak
-        ctx.fillStyle = '#e86101';
-        ctx.beginPath();
-        ctx.moveTo(10, 2);
-        ctx.lineTo(22, 6);
-        ctx.lineTo(10, 10);
-        ctx.fill();
+        ctx.moveTo(this.radius * 0.6, this.radius * 0.15);
+        ctx.lineTo(this.radius * 1.0, this.radius * 0.2);
         ctx.stroke();
 
         if (isRankOne) {

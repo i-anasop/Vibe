@@ -710,7 +710,19 @@ async function updateLeaderboard(newScore) {
 
 async function renderLeaderboard() {
     leaderboardList.innerHTML = '<li>Loading scores...</li>';
-    if (!sessionToken) return;
+    
+    // Wait up to 5s for session token if not ready yet
+    if (!sessionToken) {
+        let waited = 0;
+        while (!sessionToken && waited < 5000) {
+            await new Promise(r => setTimeout(r, 300));
+            waited += 300;
+        }
+        if (!sessionToken) {
+            leaderboardList.innerHTML = '<li>Not connected. Please check your internet and try again.</li>';
+            return;
+        }
+    }
     
     try {
         const response = await fetch(`https://api.lootlocker.io/game/leaderboards/${LL_LEADERBOARD_ID}/list?count=${PAGE_SIZE}&after=${leaderboardPage * PAGE_SIZE}`, {
@@ -722,12 +734,19 @@ async function renderLeaderboard() {
         });
         const data = await response.json();
         
+        // Log for debugging
+        if (!response.ok || data.error) {
+            console.error("Leaderboard API error:", data);
+            leaderboardList.innerHTML = `<li>Server error: ${data.message || data.error || 'Unknown'}. Try again.</li>`;
+            return;
+        }
+        
         leaderboardList.innerHTML = '';
         
         if (data.items && data.items.length > 0) {
             data.items.forEach((item) => {
                 const li = document.createElement('li');
-                const name = item.player ? (item.player.name || "Unknown") : "Unknown";
+                let name = item.player ? (item.player.name || "Unknown") : "Unknown";
                 
                 let rankDisplay = `#${item.rank}`;
                 if (item.rank === 1) rankDisplay = "🥇";

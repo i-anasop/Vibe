@@ -224,6 +224,25 @@ body {
     background: rgba(255, 255, 255, 0.2);
 }
 
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 5px rgba(243, 198, 35, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(243, 198, 35, 0.6); }
+    100% { box-shadow: 0 0 5px rgba(243, 198, 35, 0.2); }
+}
+
+#leaderboard-list li.current-player {
+    background: rgba(243, 198, 35, 0.2);
+    border: 2px solid #f3c623;
+    animation: pulseGlow 2s infinite;
+    transform: translateX(5px);
+}
+
+#leaderboard-list li.current-player .score-name, 
+#leaderboard-list li.current-player .score-value {
+    color: #ffffff;
+    text-shadow: 0 0 10px #f3c623;
+}
+
 .score-name {
     color: #ffffff;
     text-shadow: 0 2px 4px rgba(0,0,0,0.4);

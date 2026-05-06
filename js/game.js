@@ -632,6 +632,11 @@ async function renderLeaderboard() {
                 else if (item.rank === 2) rankDisplay = "🥈";
                 else if (item.rank === 3) rankDisplay = "🥉";
                 
+                if (item.member_id === playerIdentifier) {
+                    li.classList.add('current-player');
+                    name += " (YOU)";
+                }
+                
                 li.innerHTML = `<span class="score-name">${rankDisplay} ${name}</span> <span class="score-value">${item.score}</span>`;
                 leaderboardList.appendChild(li);
             });

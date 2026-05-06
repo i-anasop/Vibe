@@ -298,7 +298,23 @@ const pipes = {
         if (gameState !== 'playing') return;
         
         if (frames % 100 === 0) {
-            let topHeight = Math.max(50, Math.random() * (canvas.height - this.gap - 100));
+            const minTop = 60;
+            const usableHeight = canvas.height - this.gap - 80;
+            // Ensure enough range for randomness (min 80px spread)
+            const range = Math.max(usableHeight - minTop, 80);
+            let topHeight;
+            // Force meaningful variation: bias away from last top
+            if (this.lastTopHeight !== undefined) {
+                const minDist = range * 0.35; // must differ by at least 35% of range
+                let attempts = 0;
+                do {
+                    topHeight = minTop + Math.random() * range;
+                    attempts++;
+                } while (Math.abs(topHeight - this.lastTopHeight) < minDist && attempts < 20);
+            } else {
+                topHeight = minTop + Math.random() * range;
+            }
+            this.lastTopHeight = topHeight;
             let bottomHeight = canvas.height - this.gap - topHeight;
             
             this.items.push({ x: canvas.width, top: topHeight, bottom: bottomHeight, passed: false });
@@ -479,8 +495,24 @@ function resizeCanvas() {
         bird.y = canvas.height / 2;
     }
 }
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener('resize', () => {
+    resizeCanvas();
+    checkOrientation();
+});
 resizeCanvas();
+
+// Orientation lock - show blocker in landscape on mobile
+const landscapeBlocker = document.getElementById('landscape-blocker');
+function checkOrientation() {
+    if (window.innerHeight < 500 && window.innerWidth > window.innerHeight) {
+        landscapeBlocker.style.display = 'flex';
+    } else {
+        landscapeBlocker.style.display = 'none';
+    }
+}
+window.addEventListener('orientationchange', () => setTimeout(checkOrientation, 100));
+checkOrientation();
+
 
 // Controls
 function handleInput(e) {

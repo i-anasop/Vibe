@@ -2,13 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Flappy Glide | Official Web Game</title>
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Landscape blocker overlay -->
+    <div id="landscape-blocker">
+        <div class="landscape-content">
+            <div class="rotate-icon">📱</div>
+            <h2>Please Rotate</h2>
+            <p>This game is best played in <strong>portrait mode</strong>.</p>
+        </div>
+    </div>
+
     <div id="game-container">
         <!-- Canvas for rendering game world (bird, pipes, background scrolling) -->
         <canvas id="game-canvas"></canvas>

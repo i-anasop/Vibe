@@ -82,8 +82,8 @@ const PAGE_SIZE = 10;
 
 // Bird Object
 const bird = {
-    x: 150,
-    y: canvas.height / 2,
+    x: 100,
+    y: 300,
     velocity: 0,
     gravity: 0.25,
     jumpStrength: -6,
@@ -295,9 +295,9 @@ const particles = {
 const background = {
     dx: 1,
     clouds: [
-        {x: 100, y: 100, scale: 1},
-        {x: 400, y: 150, scale: 1.2},
-        {x: 700, y: 80, scale: 0.8}
+        {x: 50, y: 100, scale: 1},
+        {x: 150, y: 150, scale: 1.2},
+        {x: 250, y: 80, scale: 0.8}
     ],
 
     draw() {
@@ -344,6 +344,19 @@ const background = {
         }
     }
 };
+
+function resizeCanvas() {
+    const container = document.getElementById('game-container');
+    canvas.width = container.clientWidth;
+    canvas.height = container.clientHeight;
+    
+    bird.x = canvas.width * 0.25;
+    if (gameState === 'auth' || gameState === 'start') {
+        bird.y = canvas.height / 2;
+    }
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
 // Controls
 function handleInput(e) {

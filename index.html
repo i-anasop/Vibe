@@ -25,11 +25,26 @@
             </div>
 
             <div id="home-screen" class="screen">
+                <div class="home-top-bar">
+                    <div class="player-profile-card">
+                        <div class="player-details">
+                            <span class="player-name" id="profile-player-name">Player</span>
+                            <span class="player-rank" id="profile-player-rank">Rank: #--</span>
+                        </div>
+                    </div>
+                    <button id="open-settings-btn" class="settings-icon">⚙️</button>
+                </div>
+                
                 <h1 class="title" style="margin-bottom: 20px;">FLAPPY GLIDE</h1>
                 <button id="start-btn" class="flappy-button">PLAY GAME</button>
-                <button id="open-skins-btn" class="flappy-button">SKINS</button>
                 <button id="show-leaderboard-start-btn" class="flappy-button">LEADERBOARD</button>
+            </div>
+            
+            <div id="settings-screen" class="screen">
+                <h1 class="title">SETTINGS</h1>
+                <button id="open-skins-btn" class="flappy-button">SKINS</button>
                 <button id="change-name-btn" class="flappy-button">CHANGE NAME</button>
+                <button id="close-settings-btn" class="flappy-button" style="margin-top: 20px;">BACK TO HOME</button>
             </div>
             
             <div id="game-over-screen" class="screen">

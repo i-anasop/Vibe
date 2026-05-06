@@ -6,12 +6,17 @@ const authScreen = document.getElementById('auth-screen');
 const saveNameBtn = document.getElementById('save-name-btn');
 const homeScreen = document.getElementById('home-screen');
 const startBtn = document.getElementById('start-btn');
+const openSettingsBtn = document.getElementById('open-settings-btn');
+const settingsScreen = document.getElementById('settings-screen');
+const closeSettingsBtn = document.getElementById('close-settings-btn');
 const openSkinsBtn = document.getElementById('open-skins-btn');
 const changeNameBtn = document.getElementById('change-name-btn');
 const gameOverHomeBtn = document.getElementById('game-over-home-btn');
 const skinsScreen = document.getElementById('skins-screen');
 const closeSkinsBtn = document.getElementById('close-skins-btn');
 const skinCards = document.querySelectorAll('.skin-card');
+const profilePlayerName = document.getElementById('profile-player-name');
+const profilePlayerRank = document.getElementById('profile-player-rank');
 const gameOverScreen = document.getElementById('game-over-screen');
 const scoreDisplay = document.getElementById('score-display');
 const finalScoreDisplay = document.getElementById('final-score');
@@ -55,6 +60,7 @@ async function loginToLootLocker() {
                 setPlayerName(currentPlayerName);
             }
             fetchTopScore();
+            fetchPlayerRank();
         }
     } catch (e) {
         console.error("Error logging in to LootLocker", e);
@@ -100,6 +106,28 @@ async function fetchTopScore() {
     }
 }
 
+async function fetchPlayerRank() {
+    if (!sessionToken) return;
+    try {
+        const response = await fetch(`https://api.lootlocker.io/game/leaderboards/${LL_LEADERBOARD_ID}/member/${playerIdentifier}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "x-session-token": sessionToken
+            }
+        });
+        const data = await response.json();
+        if (data.rank) {
+            profilePlayerRank.innerText = `Rank: #${data.rank}`;
+            if (data.rank === 1) profilePlayerRank.innerText += ' 👑';
+        } else {
+            profilePlayerRank.innerText = `Rank: Unranked`;
+        }
+    } catch (e) {
+        console.error("Error fetching player rank", e);
+    }
+}
+
 // Game State
 let frames = 0;
 let gameState = 'auth'; // 'auth', 'start', 'playing', 'gameover'
@@ -108,6 +136,7 @@ let flashAlpha = 0;
 
 let currentPlayerName = localStorage.getItem('flappyPlayerName') || '';
 playerNameInput.value = currentPlayerName;
+profilePlayerName.innerText = currentPlayerName || 'Player';
 
 if (currentPlayerName) {
     gameState = 'start';
@@ -458,6 +487,11 @@ function handleInput(e) {
         if (tag === 'input' || tag === 'button') return;
     }
     
+    // Ignore clicks on anything that isn't the canvas when not playing
+    if (e.target && e.target !== canvas && e.code !== 'Space') {
+        return; 
+    }
+    
     if (e.type === 'keydown' && e.code !== 'Space') return;
     if (e.type === 'mousedown' && e.button !== 0) return;
     
@@ -466,7 +500,7 @@ function handleInput(e) {
     }
     
     if (gameState === 'start') {
-        startGame();
+        if (e.target === canvas || e.code === 'Space') startGame();
     } else if (gameState === 'playing') {
         bird.jump();
     }
@@ -478,6 +512,7 @@ window.addEventListener('mousedown', handleInput);
 
 saveNameBtn.addEventListener('click', () => {
     currentPlayerName = playerNameInput.value.trim().substring(0, 12) || 'Player';
+    profilePlayerName.innerText = currentPlayerName;
     try {
         localStorage.setItem('flappyPlayerName', currentPlayerName);
     } catch(e) {}
@@ -493,19 +528,29 @@ saveNameBtn.addEventListener('click', () => {
 startBtn.addEventListener('click', startGame);
 restartBtn.addEventListener('click', resetGame);
 
-openSkinsBtn.addEventListener('click', () => {
+openSettingsBtn.addEventListener('click', () => {
     homeScreen.classList.remove('active');
+    settingsScreen.classList.add('active');
+});
+
+closeSettingsBtn.addEventListener('click', () => {
+    settingsScreen.classList.remove('active');
+    homeScreen.classList.add('active');
+});
+
+openSkinsBtn.addEventListener('click', () => {
+    settingsScreen.classList.remove('active');
     skinsScreen.classList.add('active');
     updateSkinsUI();
 });
 
 closeSkinsBtn.addEventListener('click', () => {
     skinsScreen.classList.remove('active');
-    homeScreen.classList.add('active');
+    settingsScreen.classList.add('active');
 });
 
 changeNameBtn.addEventListener('click', () => {
-    homeScreen.classList.remove('active');
+    settingsScreen.classList.remove('active');
     authScreen.classList.add('active');
     gameState = 'auth';
 });
@@ -677,6 +722,7 @@ function gameOver() {
     }
     
     updateLeaderboard(score);
+    fetchPlayerRank();
     
     setTimeout(() => {
         gameOverScreen.classList.add('active');

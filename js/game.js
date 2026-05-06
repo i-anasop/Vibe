@@ -190,15 +190,29 @@ const bird = {
             ctx.filter = 'none';
         }
 
-        // Draw the bird image
-        // Center it: image is drawn from top-left, so we offset by -radius
-        if (this.img.complete) {
+        // Draw the bird image with a robust fallback
+        // We check naturalWidth to ensure the image actually loaded data
+        if (this.img.complete && this.img.naturalWidth > 0) {
             ctx.drawImage(this.img, -this.radius * 1.5, -this.radius * 1.5, this.radius * 3, this.radius * 3);
         } else {
-            // Fallback if image hasn't loaded yet
-            ctx.fillStyle = '#f3c623';
+            // RELIABLE FALLBACK: Draw a nice yellow bird shape if file is missing
+            ctx.fillStyle = '#ffeb3b';
             ctx.beginPath();
             ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#2d3436';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            // Eye
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(this.radius * 0.4, -this.radius * 0.3, this.radius * 0.3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            // Pupil
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(this.radius * 0.5, -this.radius * 0.3, this.radius * 0.1, 0, Math.PI * 2);
             ctx.fill();
         }
 
@@ -209,7 +223,7 @@ const bird = {
             ctx.shadowBlur = 0;
             ctx.font = '24px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText('👑', 0, -this.radius * 1.8);
+            ctx.fillText('👑', 0, -this.radius * 2);
         }
 
         ctx.restore();

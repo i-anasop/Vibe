@@ -33,6 +33,7 @@ const nextPageBtn = document.getElementById('next-page-btn');
 const LL_API_KEY = "dev_c7b99b0ed5f841c1b544970b3c599def";
 const LL_LEADERBOARD_ID = "34391";
 let sessionToken = null;
+let llPlayerId = null;
 
 let playerIdentifier = localStorage.getItem('ll_player_identifier');
 if (!playerIdentifier) {
@@ -55,6 +56,7 @@ async function loginToLootLocker() {
         const data = await response.json();
         if (data.session_token) {
             sessionToken = data.session_token;
+            llPlayerId = data.player_id;
             console.log("Logged into LootLocker successfully!");
             if (currentPlayerName) {
                 setPlayerName(currentPlayerName);
@@ -107,9 +109,9 @@ async function fetchTopScore() {
 }
 
 async function fetchPlayerRank() {
-    if (!sessionToken) return;
+    if (!sessionToken || !llPlayerId) return;
     try {
-        const response = await fetch(`https://api.lootlocker.io/game/leaderboards/${LL_LEADERBOARD_ID}/member/${playerIdentifier}`, {
+        const response = await fetch(`https://api.lootlocker.io/game/leaderboards/${LL_LEADERBOARD_ID}/member/${llPlayerId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -677,7 +679,7 @@ async function renderLeaderboard() {
                 else if (item.rank === 2) rankDisplay = "🥈";
                 else if (item.rank === 3) rankDisplay = "🥉";
                 
-                if (item.member_id === playerIdentifier) {
+                if (item.member_id === String(llPlayerId)) {
                     li.classList.add('current-player');
                     name += " (YOU)";
                 }
@@ -721,8 +723,9 @@ function gameOver() {
         }
     }
     
-    updateLeaderboard(score);
-    fetchPlayerRank();
+    updateLeaderboard(score).then(() => {
+        fetchPlayerRank();
+    });
     
     setTimeout(() => {
         gameOverScreen.classList.add('active');

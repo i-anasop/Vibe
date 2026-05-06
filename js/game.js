@@ -48,6 +48,7 @@ async function loginToLootLocker() {
             if (currentPlayerName) {
                 setPlayerName(currentPlayerName);
             }
+            fetchTopScore();
         }
     } catch (e) {
         console.error("Error logging in to LootLocker", e);
@@ -71,6 +72,28 @@ async function setPlayerName(name) {
     }
 }
 
+async function fetchTopScore() {
+    if (!sessionToken) return;
+    try {
+        const response = await fetch(`https://api.lootlocker.io/game/leaderboards/${LL_LEADERBOARD_ID}/list?count=1`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "x-session-token": sessionToken
+            }
+        });
+        const data = await response.json();
+        if (data.items && data.items.length > 0) {
+            globalTopScore = data.items[0].score;
+            if (personalBestScore >= globalTopScore && globalTopScore > 0) {
+                isRankOne = true;
+            }
+        }
+    } catch (e) {
+        console.error("Error fetching top score", e);
+    }
+}
+
 // Game State
 let frames = 0;
 let gameState = 'auth'; // 'auth', 'start', 'playing', 'gameover'
@@ -88,6 +111,13 @@ if (currentPlayerName) {
 
 let leaderboardPage = 0;
 const PAGE_SIZE = 10;
+
+let personalBestScore = parseInt(localStorage.getItem('flappyBestScore')) || 0;
+let globalTopScore = 0;
+let isRankOne = false;
+let shakeFrames = 0;
+let recordAlert = { active: false, alpha: 0 };
+let bgTransition = { r: 113, g: 197, b: 207 };
 
 // Bird Object
 const bird = {
@@ -109,7 +139,18 @@ const bird = {
         ctx.rotate(this.rotation);
         
         // Body
-        ctx.fillStyle = '#f3c623';
+        if (personalBestScore >= 50) {
+            ctx.fillStyle = '#00ffff';
+            ctx.shadowColor = '#00ffff';
+            ctx.shadowBlur = 15;
+        } else if (personalBestScore >= 20) {
+            ctx.fillStyle = '#FFD700';
+            ctx.shadowColor = '#FF8C00';
+            ctx.shadowBlur = 10;
+        } else {
+            ctx.fillStyle = '#f3c623';
+            ctx.shadowBlur = 0;
+        }
         ctx.beginPath();
         ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
         ctx.fill();
@@ -145,6 +186,13 @@ const bird = {
         ctx.lineTo(10, 10);
         ctx.fill();
         ctx.stroke();
+
+        if (isRankOne) {
+            ctx.shadowBlur = 0;
+            ctx.font = '20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('👑', 0, -25);
+        }
 
         ctx.restore();
     },
@@ -308,10 +356,38 @@ const background = {
         {x: 150, y: 150, scale: 1.2},
         {x: 250, y: 80, scale: 0.8}
     ],
+    stars: [],
+
+    initStars() {
+        for (let i = 0; i < 50; i++) {
+            this.stars.push({
+                x: Math.random() * 800,
+                y: Math.random() * 300,
+                alpha: Math.random()
+            });
+        }
+    },
 
     draw() {
-        ctx.fillStyle = '#71c5cf';
+        let target = {r: 113, g: 197, b: 207}; // Day
+        if (score >= 20) target = {r: 26, g: 43, b: 76}; // Night
+        else if (score >= 10) target = {r: 255, g: 140, b: 58}; // Sunset
+        
+        bgTransition.r += (target.r - bgTransition.r) * 0.05;
+        bgTransition.g += (target.g - bgTransition.g) * 0.05;
+        bgTransition.b += (target.b - bgTransition.b) * 0.05;
+        
+        ctx.fillStyle = `rgb(${Math.round(bgTransition.r)}, ${Math.round(bgTransition.g)}, ${Math.round(bgTransition.b)})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        if (score >= 20) {
+            ctx.fillStyle = '#ffffff';
+            for (let s of this.stars) {
+                ctx.globalAlpha = s.alpha;
+                ctx.fillRect(s.x, s.y, 2, 2);
+            }
+            ctx.globalAlpha = 1.0;
+        }
 
         ctx.fillStyle = '#ffffff';
         ctx.globalAlpha = 0.8;
@@ -353,6 +429,7 @@ const background = {
         }
     }
 };
+background.initStars();
 
 function resizeCanvas() {
     const container = document.getElementById('game-container');
@@ -522,8 +599,17 @@ function gameOver() {
     gameState = 'gameover';
     bird.velocity = 0;
     flashAlpha = 1;
+    shakeFrames = 20;
     particles.createExplosion(bird.x, bird.y);
     scoreDisplay.classList.remove('active');
+    
+    if (score > personalBestScore) {
+        personalBestScore = score;
+        localStorage.setItem('flappyBestScore', personalBestScore);
+        if (personalBestScore >= globalTopScore && globalTopScore > 0) {
+            isRankOne = true;
+        }
+    }
     
     updateLeaderboard(score);
     
@@ -548,6 +634,12 @@ function resetGame() {
 
 // Main Game Loop
 function loop() {
+    ctx.save();
+    if (shakeFrames > 0) {
+        ctx.translate((Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15);
+        shakeFrames--;
+    }
+
     background.update();
     background.draw();
     
@@ -566,6 +658,26 @@ function loop() {
         flashAlpha -= 0.05;
     }
     
+    if (gameState === 'playing' && globalTopScore > 0 && score > globalTopScore && !recordAlert.active) {
+        recordAlert.active = true;
+        recordAlert.alpha = 2.0;
+        globalTopScore = score;
+        isRankOne = true;
+    }
+    
+    if (recordAlert.active && recordAlert.alpha > 0) {
+        ctx.fillStyle = `rgba(255, 215, 0, ${Math.min(1, recordAlert.alpha)})`;
+        ctx.font = 'bold 30px Orbitron';
+        ctx.textAlign = 'center';
+        ctx.shadowColor = '#000';
+        ctx.shadowBlur = 10;
+        ctx.fillText("NEW WORLD RECORD!", canvas.width / 2, canvas.height / 3);
+        ctx.shadowBlur = 0;
+        recordAlert.alpha -= 0.01;
+    }
+    
+    ctx.restore();
+
     if (gameState === 'playing') {
         frames++;
     }

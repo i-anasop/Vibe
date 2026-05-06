@@ -61,22 +61,38 @@
                 <h1 class="title">SKINS</h1>
                 <div class="skins-grid">
                     <div class="skin-card" data-skin="standard">
-                        <div class="skin-preview" style="background: #f3c623;"></div>
+                        <div class="skin-preview" style="background: #f3c623;">
+                            <div class="css-eye"></div><div class="css-wing"></div><div class="css-beak"></div>
+                        </div>
                         <p>Standard</p>
-                        <span>Unlocked</span>
+                        <div class="skin-status" style="margin-top: 15px; color: #a8ff78; font-weight: bold;">Unlocked</div>
                     </div>
                     <div class="skin-card locked" id="skin-gold" data-skin="golden">
-                        <div class="skin-preview" style="background: #FFD700; box-shadow: 0 0 10px #FF8C00;"></div>
+                        <div class="skin-preview" style="background: #FFD700; box-shadow: 0 0 20px #FF8C00;">
+                            <div class="css-eye"></div><div class="css-wing"></div><div class="css-beak"></div>
+                        </div>
                         <p>Golden</p>
-                        <span>🔒 Best: 20</span>
+                        <div class="skin-status" id="status-gold">
+                            <span class="progress-text" id="text-gold">Progress: 0 / 20</span>
+                            <div class="progress-container">
+                                <div class="progress-bar" id="bar-gold" style="width: 0%; background: #FFD700;"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="skin-card locked" id="skin-neon" data-skin="neon">
-                        <div class="skin-preview" style="background: #00ffff; box-shadow: 0 0 15px #00ffff;"></div>
+                        <div class="skin-preview" style="background: #00ffff; box-shadow: 0 0 20px #00ffff;">
+                            <div class="css-eye"></div><div class="css-wing"></div><div class="css-beak"></div>
+                        </div>
                         <p>Neon Blue</p>
-                        <span>🔒 Best: 50</span>
+                        <div class="skin-status" id="status-neon">
+                            <span class="progress-text" id="text-neon">Progress: 0 / 50</span>
+                            <div class="progress-container">
+                                <div class="progress-bar" id="bar-neon" style="width: 0%; background: #00ffff;"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <button id="close-skins-btn" class="flappy-button" style="margin-top: 20px;">BACK TO HOME</button>
+                <button id="close-skins-btn" class="flappy-button" style="margin-top: 20px;">BACK TO SETTINGS</button>
             </div>
 
             <div id="leaderboard-screen" class="screen">

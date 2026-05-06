@@ -567,13 +567,36 @@ function updateSkinsUI() {
     const goldCard = document.getElementById('skin-gold');
     const neonCard = document.getElementById('skin-neon');
     
+    // Gold Progress
+    const goldProgress = Math.min(personalBestScore, 20);
+    const goldPercent = (goldProgress / 20) * 100;
+    const textGold = document.getElementById('text-gold');
+    const barGold = document.getElementById('bar-gold');
+    if (textGold && barGold) {
+        textGold.innerText = `Progress: ${goldProgress} / 20`;
+        barGold.style.width = `${goldPercent}%`;
+    }
+    
     if (personalBestScore >= 20) {
         goldCard.classList.remove('locked');
-        goldCard.querySelector('span').innerText = 'Unlocked';
+        const statusGold = document.getElementById('status-gold');
+        if (statusGold) statusGold.innerHTML = '<span style="color: #a8ff78; font-weight: bold;">Unlocked</span>';
     }
+    
+    // Neon Progress
+    const neonProgress = Math.min(personalBestScore, 50);
+    const neonPercent = (neonProgress / 50) * 100;
+    const textNeon = document.getElementById('text-neon');
+    const barNeon = document.getElementById('bar-neon');
+    if (textNeon && barNeon) {
+        textNeon.innerText = `Progress: ${neonProgress} / 50`;
+        barNeon.style.width = `${neonPercent}%`;
+    }
+    
     if (personalBestScore >= 50) {
         neonCard.classList.remove('locked');
-        neonCard.querySelector('span').innerText = 'Unlocked';
+        const statusNeon = document.getElementById('status-neon');
+        if (statusNeon) statusNeon.innerHTML = '<span style="color: #a8ff78; font-weight: bold;">Unlocked</span>';
     }
     
     skinCards.forEach(card => {

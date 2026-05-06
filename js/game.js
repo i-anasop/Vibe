@@ -480,7 +480,13 @@ async function renderLeaderboard() {
             data.items.forEach((item) => {
                 const li = document.createElement('li');
                 const name = item.player ? (item.player.name || "Unknown") : "Unknown";
-                li.innerHTML = `<span>#${item.rank} ${name}</span> <span>${item.score}</span>`;
+                
+                let rankDisplay = `#${item.rank}`;
+                if (item.rank === 1) rankDisplay = "🥇";
+                else if (item.rank === 2) rankDisplay = "🥈";
+                else if (item.rank === 3) rankDisplay = "🥉";
+                
+                li.innerHTML = `<span class="score-name">${rankDisplay} ${name}</span> <span class="score-value">${item.score}</span>`;
                 leaderboardList.appendChild(li);
             });
             

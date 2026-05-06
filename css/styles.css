@@ -419,7 +419,7 @@ body {
     height: 60px;
     margin: 0 auto 10px auto;
     position: relative;
-    background-image: url('../assets/bird.svg');
+    background-image: url('../assets/bird.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

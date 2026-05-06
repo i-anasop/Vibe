@@ -169,7 +169,7 @@ const bird = {
     
     init() {
         this.img = new Image();
-        this.img.src = 'assets/bird.svg';
+        this.img.src = 'assets/bird.png';
     },
 
     draw() {

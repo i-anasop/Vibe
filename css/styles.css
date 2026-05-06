@@ -190,6 +190,21 @@ body {
     font-weight: bold;
     list-style: none;
     width: 100%;
+    max-height: 40vh;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+#leaderboard-list::-webkit-scrollbar {
+    width: 6px;
+}
+#leaderboard-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+#leaderboard-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
 }
 
 #leaderboard-list li {
@@ -279,5 +294,12 @@ body {
     }
     #player-name-input, .score-board, .flappy-button {
         width: 90%;
+    }
+    .score-board {
+        margin: 15px 0;
+        padding: 15px;
+    }
+    #leaderboard-list {
+        max-height: 50vh;
     }
 }
